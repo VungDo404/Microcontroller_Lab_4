@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+
 #include "command_parser_fsm.h"
 #include "uart_communication_fsm.h"
 #include "software_timer.h"
@@ -65,8 +66,6 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define MAX_BUFFER_SIZE 30
-uint8_t buffer[MAX_BUFFER_SIZE];
 uint8_t temp = 0;
 uint8_t index_buffer = 0;
 uint8_t buffer_flag = 0;
@@ -115,20 +114,28 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart2 ,&temp , 1);
+  int parser_state = PARSER_INIT;
+  int uart_state = UART_INIT;
   uint32_t ADC_value = 0;
   char str[100];
+  uint8_t abc = "OK";
+
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, SET);
 	  HAL_ADC_Start(&hadc1);
 	  ADC_value = HAL_ADC_GetValue(&hadc1);
-	  HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "%d\n", ADC_value), 1000);
-	  if(temp == '1')
-		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port , LED_RED_Pin);
-	  HAL_Delay(500);
+	  HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "\r\n"), 50);
+	  //memcmp(temp,"OK",2)==0
+	  if(temp == '!')
+//		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port , LED_RED_Pin);
+		  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, RESET);
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -284,7 +291,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9000;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
