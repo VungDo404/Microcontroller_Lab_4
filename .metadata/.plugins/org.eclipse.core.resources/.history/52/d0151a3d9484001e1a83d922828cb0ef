@@ -1,0 +1,38 @@
+/*
+ * uart_communication_fsm.c
+ *
+ *  Created on: Nov 13, 2023
+ *      Author: Admin
+ */
+#include "uart_communication_fsm.h"
+
+void uart_communication_fsm(){
+	switch (uart_state) {
+		case UART_IDLING:
+				break;
+		case UART_PROCESS:
+			if(strcmp((const char *)buffer, RESP_OK) == 0){
+				uart_state = UART_SEND;
+				HAL_ADC_Start(&hadc1);
+				ADC_value = HAL_ADC_GetValue(&hadc1);
+				HAL_ADC_Stop(&hadc1);
+			}
+			break;
+		case UART_SEND:
+			uart_state = UART_WAIT;
+
+			HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "%d\n", ADC_value) ,1000);
+			break;
+		case UART_WAIT:
+			if(timer_flag[1] == 1){
+				uart_state = UART_SEND;
+				setTimer(300, 1);
+			}
+			break;
+		default:
+			uart_state = UART_IDLING;
+			parser_state = PARSER_INIT;
+			setTimer(300, 1);
+			break;
+	}
+}

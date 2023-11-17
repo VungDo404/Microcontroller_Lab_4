@@ -22,11 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stdio.h"
-
 #include "command_parser_fsm.h"
 #include "uart_communication_fsm.h"
-#include "software_timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,28 +111,21 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart2 ,&temp , 1);
-  int parser_state = PARSER_INIT;
-  int uart_state = UART_INIT;
-  uint32_t ADC_value = 0;
-  char str[100];
-  uint8_t abc = "OK";
-
   HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, SET);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, SET);
-	  HAL_ADC_Start(&hadc1);
-	  ADC_value = HAL_ADC_GetValue(&hadc1);
-	  HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "\r\n"), 50);
-	  //memcmp(temp,"OK",2)==0
-	  if(temp == '!')
-//		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port , LED_RED_Pin);
-		  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, RESET);
-	  HAL_Delay(1000);
+	  if(buffer_flag == 1){
+		  command_parser_fsm();
+		  buffer_flag == 0;
+	  }
+	  uart_communication_fsm();
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -335,6 +325,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	timerRun(0); // led duration
+	timerRun(1); // wait 3s
 
 };
 /* USER CODE END 4 */

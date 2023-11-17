@@ -1,0 +1,12 @@
+/*
+ * global.c
+ *
+ *  Created on: Nov 15, 2023
+ *      Author: Admin
+ */
+#include "global.h"
+
+void clear(){
+	memset(buffer,' ', sizeof(buffer));
+	index_buffer = 0;
+}
