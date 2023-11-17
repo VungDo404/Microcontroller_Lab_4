@@ -17,7 +17,6 @@ void uart_communication_fsm(){
 		case UART_IDLING:
 				break;
 		case UART_PROCESS:
-
 			if(strcmp((const char *)buffer, RESP_OK) == 0){
 				uart_state = UART_SEND;
 				HAL_ADC_Start(&hadc1);
@@ -26,27 +25,25 @@ void uart_communication_fsm(){
 			}
 			break;
 		case UART_SEND:
-			uart_state = UART_IDLING;
-			parser_state = PARSER_INIT;
+			uart_state = UART_WAIT;
 			setTimer(300, 1);
 			ADC_temp = ADC_value;
 			HAL_UART_Transmit(&huart2 ,(void*)str, sprintf(str , "\r\n!ADC=%d#\r", ADC_temp), 1000);
-//			HAL_UART_Transmit(&huart2 ,(void*)str, sprintf(str , "\r\n%c", buffer), 1000);
 			break;
-//		case UART_WAIT:
-////			if(timer_flag[1] == 1){
-////				uart_state = UART_SEND;
-////			}
-//			//
-//			HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "\r\n"), 1000);
-//			uart_state = UART_IDLING;
-//			parser_state = PARSER_INIT;
-//			if(strcmp((const char *)buffer, RESP_OK) == 0){
-//				HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, RESET);
-//				uart_state = UART_IDLING;
-//				parser_state = PARSER_INIT;
+		case UART_WAIT:
+//			if(timer_flag[1] == 1){
+//				uart_state = UART_SEND;
 //			}
-//			break;
+			//
+			HAL_UART_Transmit(&huart2 , (void*)str , sprintf(str , "\r\n"), 1000);
+			uart_state = UART_IDLING;
+			parser_state = PARSER_INIT;
+			if(strcmp((const char *)buffer, RESP_OK) == 0){
+				HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, RESET);
+				uart_state = UART_IDLING;
+				parser_state = PARSER_INIT;
+			}
+			break;
 		default:
 			uart_state = UART_IDLING;
 			parser_state = PARSER_INIT;
