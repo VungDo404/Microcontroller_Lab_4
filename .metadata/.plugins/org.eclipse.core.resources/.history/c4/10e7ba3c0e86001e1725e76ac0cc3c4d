@@ -7,9 +7,8 @@
 #include "global.h"
 
 
-int uart_state = UART_IDLING;
-int	parser_state = PARSER_INIT;
-uint8_t command_data[MAX_BUFFER_SIZE];
+int parser_state = 0;
+int uart_state = 0;
 void clear(){
 	memset(buffer,'\0', sizeof(buffer));
 	index_buffer = 0;

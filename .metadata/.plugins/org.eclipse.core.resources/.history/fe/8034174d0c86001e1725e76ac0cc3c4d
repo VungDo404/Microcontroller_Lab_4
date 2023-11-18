@@ -18,16 +18,16 @@ void uart_communication_fsm(){
 				break;
 		case UART_PROCESS:
 
-			if(memcmp(command_data,"OK#",3) == 0){
+			if(strcmp((const char *)buffer, RESP_OK) == 0){
 				uart_state = UART_SEND;
 				HAL_ADC_Start(&hadc1);
 				ADC_value = HAL_ADC_GetValue(&hadc1);
-//				HAL_ADC_Stop(&hadc1);
+				HAL_ADC_Stop(&hadc1);
 			}
 			break;
 		case UART_SEND:
 			uart_state = UART_IDLING;
-//			parser_state = PARSER_INIT;
+			parser_state = PARSER_INIT;
 			setTimer(300, 1);
 			ADC_temp = ADC_value;
 			HAL_UART_Transmit(&huart2 ,(void*)str, sprintf(str , "\r\n!ADC=%d#\r", ADC_temp), 1000);
@@ -48,7 +48,8 @@ void uart_communication_fsm(){
 //			}
 //			break;
 		default:
-
+			uart_state = UART_IDLING;
+			parser_state = PARSER_INIT;
 			break;
 	}
 }
