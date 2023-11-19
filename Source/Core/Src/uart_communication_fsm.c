@@ -26,7 +26,7 @@ void uart_communication_fsm(){
 			setTimer(300, 1);
 			uart_state = UART_WAIT;
 			ADC_temp = ADC_value;
-			HAL_UART_Transmit(&huart2 ,(void*)str, sprintf(str , "\r\n!ADC=%d#\r", ADC_temp), 1000);
+			HAL_UART_Transmit(&huart2, (void*)str, sprintf(str , "\r\n!ADC=%d#\r", ADC_temp), 1000);
 			break;
 		case UART_WAIT:
 			if(timer_flag[1] == 1)
