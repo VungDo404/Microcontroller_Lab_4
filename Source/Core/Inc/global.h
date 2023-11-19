@@ -11,6 +11,7 @@
 #include "stdio.h"
 #include <string.h>
 #include "software_timer.h"
+#include "main.h"
 
 #define PARSER_INIT 1
 #define PARSER_END 2
@@ -31,6 +32,11 @@ extern uint8_t index_buffer;
 extern uint8_t buffer_flag;
 
 extern uint8_t previous;
+
+extern ADC_HandleTypeDef hadc1;
+extern UART_HandleTypeDef huart2;
+
+char str[100];
 
 void clear();
 #endif /* INC_GLOBAL_H_ */
