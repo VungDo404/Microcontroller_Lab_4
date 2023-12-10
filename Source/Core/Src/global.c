@@ -12,7 +12,6 @@ int	parser_state = PARSER_INIT;
 uint8_t command_data[MAX_BUFFER_SIZE];
 void clear(){
 	memset(buffer,'\0', sizeof(buffer));
-//	memset(command_data,'\0', sizeof(command_data));
 	index_buffer = 0;
 	temp = '\0';
 }

@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 #include "command_parser_fsm.h"
 #include "uart_communication_fsm.h"
+#include "scheduler.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,19 +113,35 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_UART_Receive_IT(&huart2 ,&temp , 1);
-  HAL_GPIO_WritePin(LED_RED_GPIO_Port , LED_RED_Pin, SET);
   setTimer(300, 1);
+  void parserTask(){
+	  if(buffer_flag == 1){
+		  command_parser_fsm();
+		  buffer_flag = 0;
+	  }
+  }
+  void uartTask(){
+	  uart_communication_fsm();
+  }
+  void toggleLed(){
+	  HAL_GPIO_TogglePin(LED_RED_GPIO_Port , LED_RED_Pin);
+  }
+  void timerRun2Task(){
+	  timerRun(2);
+  }
+  SCH_Init();
+  SCH_Add_Task(toggleLed,0,500);
+//  SCH_Add_Task(parserTask,0,1);
+//  SCH_Add_Task(uartTask,0,1);
+//  SCH_Add_Task(timerRun2Task,0,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(buffer_flag == 1){
-		  command_parser_fsm();
-		  buffer_flag = 0;
-	  }
-	  uart_communication_fsm();
+	  SCH_Dispatch_Tasks();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -322,9 +340,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	timerRun(0); // led duration
-	timerRun(1); // fsm
-	timerRun(2); // wait 3s
+	SCH_Update();
 
 };
 /* USER CODE END 4 */

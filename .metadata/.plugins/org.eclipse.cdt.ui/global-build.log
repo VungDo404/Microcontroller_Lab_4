@@ -1,14 +1,15 @@
-14:18:02 **** Incremental Build of configuration Debug for project Source ****
+18:03:26 **** Incremental Build of configuration Debug for project Source ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/command_parser_fsm.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/command_parser_fsm.d" -MT"Core/Src/command_parser_fsm.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/command_parser_fsm.o"
-arm-none-eabi-gcc "../Core/Src/uart_communication_fsm.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/uart_communication_fsm.d" -MT"Core/Src/uart_communication_fsm.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/uart_communication_fsm.o"
-../Core/Src/uart_communication_fsm.c: In function 'uart_communication_fsm':
-../Core/Src/uart_communication_fsm.c:29:68: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
-   29 |    HAL_UART_Transmit(&huart2 ,(void*)str, sprintf(str , "\r\n!ADC=%d#\r", ADC_temp), 1000);
-      |                                                                   ~^      ~~~~~~~~
-      |                                                                    |      |
-      |                                                                    int    uint32_t {aka long unsigned int}
-      |                                                                   %ld
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:129:8: warning: 'timerRun2Task' defined but not used [-Wunused-function]
+  129 |   void timerRun2Task(){
+      |        ^~~~~~~~~~~~~
+../Core/Src/main.c:123:8: warning: 'uartTask' defined but not used [-Wunused-function]
+  123 |   void uartTask(){
+      |        ^~~~~~~~
+../Core/Src/main.c:117:8: warning: 'parserTask' defined but not used [-Wunused-function]
+  117 |   void parserTask(){
+      |        ^~~~~~~~~~
 arm-none-eabi-gcc -o "Source.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\LAB_4\Source\STM32F103C6UX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Source.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Source.elf
  
@@ -16,7 +17,7 @@ arm-none-eabi-size   Source.elf
 arm-none-eabi-objdump -h -S  Source.elf  > "Source.list"
 arm-none-eabi-objcopy  -O ihex  Source.elf  "Source.hex"
    text	   data	    bss	    dec	    hex	filename
-  16320	    128	   2048	  18496	   4840	Source.elf
+  14456	     20	   2212	  16688	   4130	Source.elf
 arm-none-eabi-objcopy  -O binary  Source.elf  "Source.bin"
 Finished building: default.size.stdout
  

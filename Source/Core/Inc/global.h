@@ -30,6 +30,7 @@ uint8_t command_data[MAX_BUFFER_SIZE];
 extern uint8_t temp;
 extern uint8_t index_buffer;
 extern uint8_t buffer_flag;
+extern int uart_flag;
 
 extern uint8_t previous;
 
